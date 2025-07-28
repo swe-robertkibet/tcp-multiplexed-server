@@ -1,0 +1,64 @@
+# Compiled binaries and executables
+server
+test_client
+tcp_server
+multiplexed_server
+
+# Object files
+*.o
+*.obj
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Static and dynamic libraries
+*.a
+*.la
+*.lo
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Build directories
+build/
+bin/
+obj/
+
+# Core dumps and crash files
+core
+core.*
+*.core
+vgcore.*
+
+# Log files (from server testing)
+*.log
+server.log
+client.log
+connection.log
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+
+# System files
+.nfs*
+
+# Valgrind output
+valgrind-out.txt
+massif.out.*
+
+# Make dependency files
+*.d
