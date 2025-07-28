@@ -119,7 +119,7 @@ void process_client_message(server_t *server, int client_fd, char *buffer, int b
     
     // Log sent response
     snprintf(log_msg, sizeof(log_msg), "Sent to %s: \"Echo: %s\"", addr_str, buffer);
-    print_info(log_msg);
+    print_message_info(log_msg);
 }
 
 /**
