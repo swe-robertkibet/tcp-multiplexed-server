@@ -18,7 +18,7 @@ static server_t *g_server = NULL;
 void signal_handler(int sig) {
     (void)sig;  // Suppress unused parameter warning
     if (g_server != NULL) {
-        print_info("Received shutdown signal, stopping server...");
+        print_server_info("Received shutdown signal, stopping server...");
         g_server->running = 0;
     }
 }
@@ -107,7 +107,7 @@ void run_server(server_t *server) {
         }
     }
     
-    print_info("Server shutting down...");
+    print_server_info("Server shutting down...");
     shutdown_server(server);
 }
 
@@ -134,7 +134,7 @@ void handle_new_connection(server_t *server) {
         // Server is full, reject connection
         addr_to_string(&client_addr, addr_str, sizeof(addr_str));
         snprintf(info_msg, sizeof(info_msg), "Server full, rejecting connection from %s", addr_str);
-        print_info(info_msg);
+        print_connection_info(info_msg);
         close(client_fd);
         return;
     }
@@ -149,7 +149,7 @@ void handle_new_connection(server_t *server) {
     addr_to_string(&client_addr, addr_str, sizeof(addr_str));
     snprintf(info_msg, sizeof(info_msg), "New client connected from %s (clients: %d/%d)", 
              addr_str, get_active_client_count(server), MAX_CLIENTS);
-    print_info(info_msg);
+    print_connection_info(info_msg);
 }
 
 /**
@@ -209,7 +209,7 @@ void remove_client(server_t *server, int client_index) {
     addr_to_string(&server->clients[client_index].address, addr_str, sizeof(addr_str));
     snprintf(info_msg, sizeof(info_msg), "Client %s disconnected (clients: %d/%d)", 
              addr_str, get_active_client_count(server) - 1, MAX_CLIENTS);
-    print_info(info_msg);
+    print_connection_info(info_msg);
     
     // Remove from file descriptor set
     FD_CLR(client_fd, &server->master_set);
@@ -234,7 +234,7 @@ void remove_client(server_t *server, int client_index) {
  */
 void shutdown_server(server_t *server) {
     cleanup_server_resources(server);
-    print_info("Server shutdown complete");
+    print_server_info("Server shutdown complete");
 }
 
 /**
