@@ -75,26 +75,112 @@ void setup_server_address(struct sockaddr_in *addr, int port) {
 }
 
 /**
- * Print error message with system error description
+ * Check if terminal supports colors
  */
-void print_error(const char *message) {
-    fprintf(stderr, "[ERROR] %s: %s\n", message, strerror(errno));
+int terminal_supports_colors(void) {
+    if (colors_enabled == -1) {
+        // Check if stdout is a terminal and TERM is set
+        if (isatty(STDOUT_FILENO)) {
+            const char *term = getenv("TERM");
+            if (term && strcmp(term, "dumb") != 0) {
+                colors_enabled = 1;
+            } else {
+                colors_enabled = 0;
+            }
+        } else {
+            colors_enabled = 0;
+        }
+    }
+    return colors_enabled;
 }
 
 /**
- * Print information message with timestamp
+ * Get color code for log type
  */
-void print_info(const char *message) {
+static const char* get_log_color(log_type_t type) {
+    if (!terminal_supports_colors()) {
+        return "";
+    }
+    
+    switch (type) {
+        case LOG_ERROR:      return COLOR_BRIGHT_RED;
+        case LOG_SERVER:     return COLOR_BRIGHT_GREEN;
+        case LOG_CONNECTION: return COLOR_BRIGHT_BLUE;
+        case LOG_MESSAGE:    return COLOR_BRIGHT_YELLOW;
+        case LOG_INFO:
+        default:             return COLOR_GREEN;
+    }
+}
+
+/**
+ * Get log type prefix
+ */
+static const char* get_log_prefix(log_type_t type) {
+    switch (type) {
+        case LOG_ERROR:      return "ERROR";
+        case LOG_SERVER:     return "SERVER";
+        case LOG_CONNECTION: return "CONNECT";
+        case LOG_MESSAGE:    return "MESSAGE";
+        case LOG_INFO:
+        default:             return "INFO";
+    }
+}
+
+/**
+ * Print error message with system error description
+ */
+void print_error(const char *message) {
+    const char *color = terminal_supports_colors() ? COLOR_BRIGHT_RED : "";
+    const char *reset = terminal_supports_colors() ? COLOR_RESET : "";
+    fprintf(stderr, "%s[ERROR]%s %s: %s\n", color, reset, message, strerror(errno));
+}
+
+/**
+ * Print colored log message with timestamp
+ */
+void print_log(log_type_t type, const char *message) {
     time_t now;
     char time_str[26];
+    const char *color = get_log_color(type);
+    const char *prefix = get_log_prefix(type);
+    const char *reset = terminal_supports_colors() ? COLOR_RESET : "";
+    const char *time_color = terminal_supports_colors() ? COLOR_CYAN : "";
     
     time(&now);
     ctime_r(&now, time_str);
     // Remove newline from time string
     time_str[strlen(time_str) - 1] = '\0';
     
-    printf("[INFO] [%s] %s\n", time_str, message);
+    printf("%s[%s]%s %s[%s]%s %s\n", color, prefix, reset, time_color, time_str, reset, message);
     fflush(stdout);
+}
+
+/**
+ * Print information message with timestamp (legacy function)
+ */
+void print_info(const char *message) {
+    print_log(LOG_INFO, message);
+}
+
+/**
+ * Print server status message
+ */
+void print_server_info(const char *message) {
+    print_log(LOG_SERVER, message);
+}
+
+/**
+ * Print connection event message
+ */
+void print_connection_info(const char *message) {
+    print_log(LOG_CONNECTION, message);
+}
+
+/**
+ * Print message traffic information
+ */
+void print_message_info(const char *message) {
+    print_log(LOG_MESSAGE, message);
 }
 
 /**

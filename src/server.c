@@ -55,7 +55,7 @@ int initialize_server(server_t *server, int port) {
     server->max_fd = server->server_socket;
     
     snprintf(info_msg, sizeof(info_msg), "Server initialized on port %d", port);
-    print_info(info_msg);
+    print_server_info(info_msg);
     
     return 0;
 }
@@ -74,8 +74,8 @@ void run_server(server_t *server) {
     signal(SIGTERM, signal_handler);
     
     snprintf(info_msg, sizeof(info_msg), "Server listening on port %d", server->port);
-    print_info(info_msg);
-    print_info("Press Ctrl+C to stop the server");
+    print_server_info(info_msg);
+    print_server_info("Press Ctrl+C to stop the server");
     
     while (server->running) {
         // Copy master set to working set
