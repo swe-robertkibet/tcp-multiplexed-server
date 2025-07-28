@@ -9,6 +9,9 @@
 #include <errno.h>
 #include <time.h>
 
+// Global variable to track color support
+static int colors_enabled = -1;  // -1 = not initialized, 0 = disabled, 1 = enabled
+
 /**
  * Create and configure a TCP server socket
  */
