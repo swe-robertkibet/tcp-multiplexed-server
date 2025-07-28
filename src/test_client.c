@@ -148,7 +148,7 @@ void automated_test_mode(int client_fd) {
         }
         
         // Small delay between messages
-        usleep(500000);  // 0.5 seconds
+        sleep(1);  // 1 second
         i++;
     }
     
