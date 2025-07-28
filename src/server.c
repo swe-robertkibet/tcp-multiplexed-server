@@ -16,6 +16,7 @@ static server_t *g_server = NULL;
  * Signal handler for graceful shutdown
  */
 void signal_handler(int sig) {
+    (void)sig;  // Suppress unused parameter warning
     if (g_server != NULL) {
         print_info("Received shutdown signal, stopping server...");
         g_server->running = 0;
