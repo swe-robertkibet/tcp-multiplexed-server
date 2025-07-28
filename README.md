@@ -30,6 +30,9 @@ make clean
 make test
 ```
 
+![Build and Test Process](images/starting_server.png)
+*The build system in action - compiling the project and running automated tests*
+
 The build system creates separate executables in the `bin/` directory:
 
 **Start the server:**
@@ -52,6 +55,9 @@ If you don't specify a port, it defaults to 8080. The server will print connecti
 ```
 
 The test client has both interactive and automated modes. Interactive lets you type messages and see the responses. Automated mode sends a series of test messages which is useful for verifying everything works correctly.
+
+![Server with Multiple Clients](images/1server2clients.png)
+*The server handling multiple simultaneous client connections with colored log output - server logs on the left, two client terminals on the right*
 
 ## Implementation Details
 
@@ -83,6 +89,8 @@ Client management happens through a simple array of client_info_t structures. Ea
 Error handling was something I spent time getting right. Network programming has lots of edge cases - clients can disconnect unexpectedly, system calls can be interrupted by signals, and you need to handle partial reads/writes. I tried to handle these gracefully without cluttering the main logic too much. The logging system prints timestamped messages so you can track what's happening during operation.
 
 One thing I learned is that signal handling with select() requires some care. I set up handlers for SIGINT and SIGTERM to allow graceful shutdown, but had to account for select() being interrupted by signals. The EINTR check in the main loop handles this properly.
+
+The logging system includes color-coded output that makes it much easier to follow what's happening. Server status messages appear in green, connection events in blue, message traffic in yellow, and errors in red. The colors automatically disable when output is redirected to files or pipes, so it works well in both interactive and automated environments.
 
 ## Project Structure
 
