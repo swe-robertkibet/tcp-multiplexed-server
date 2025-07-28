@@ -139,4 +139,4 @@ You can also test manually by running multiple client instances simultaneously t
 
 To test the connection limit, you could write a simple script that opens 35+ connections and verify that the server properly rejects connections beyond its limit.
 
-This was a great project for understanding low-level network programming. The code is clean, well-documented, and demonstrates solid understanding of socket programming fundamentals without unnecessary complexity.
+Working on this project taught me a lot about the practical side of network programming. There are definitely things I'd do differently next time - maybe implement dynamic client allocation or add support for different message types - but it serves its purpose as a solid foundation for understanding how multiplexed servers work.
