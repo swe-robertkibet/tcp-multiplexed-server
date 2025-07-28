@@ -1,5 +1,9 @@
 # TCP Multiplexed Server
 
+<div align="center">
+  <img src="images/undraw_server-cluster_7ugi.svg" alt="Server Architecture" width="400"/>
+</div>
+
 This is a TCP server I built for my network programming coursework that handles multiple client connections simultaneously using the select() system call. Instead of creating new processes or threads for each client, it uses I/O multiplexing to manage everything in a single process. The server implements a simple echo service where clients can send messages and receive them back with an "Echo: " prefix.
 
 I wanted to really understand how network servers work under the hood, so I avoided higher-level abstractions and built everything from scratch using standard POSIX socket APIs. The whole thing is written in C99 with strict compiler warnings enabled because I find that catches a lot of subtle bugs early.
