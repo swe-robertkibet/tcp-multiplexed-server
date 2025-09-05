@@ -16,7 +16,7 @@ My implementation tracks up to 30 concurrent clients in a simple array. I chose 
 
 The server uses a master file descriptor set to track all active sockets, then copies it to a working set for each select() call. When select() returns, I check which sockets have activity and handle them appropriately. New connections get accepted and added to the client list, while existing clients get their messages read and echoed back.
 
-## Building and Running
+## Building and Running the project
 
 You'll need GCC and make. The project builds cleanly on Linux systems (I developed it on Ubuntu).
 
@@ -24,7 +24,7 @@ You'll need GCC and make. The project builds cleanly on Linux systems (I develop
 # Build debug version (default)
 make
 
-# Or build optimized release version  
+# Or build optimized release version
 make release
 
 # Clean build artifacts
@@ -35,11 +35,12 @@ make test
 ```
 
 ![Build and Test Process](images/starting_server.png)
-*The build system in action - compiling the project and running automated tests*
+_The build system in action - compiling the project and running automated tests_
 
 The build system creates separate executables in the `bin/` directory:
 
 **Start the server:**
+
 ```bash
 ./bin/tcp_server [port]
 ```
@@ -47,6 +48,7 @@ The build system creates separate executables in the `bin/` directory:
 If you don't specify a port, it defaults to 8080. The server will print connection logs with timestamps so you can see what's happening.
 
 **Connect a test client:**
+
 ```bash
 # Interactive mode - type messages manually
 ./bin/test_client
@@ -61,7 +63,7 @@ If you don't specify a port, it defaults to 8080. The server will print connecti
 The test client has both interactive and automated modes. Interactive lets you type messages and see the responses. Automated mode sends a series of test messages which is useful for verifying everything works correctly.
 
 ![Server with Multiple Clients](images/1server2clients.png)
-*The server handling multiple simultaneous client connections with colored log output - server logs on the left, two client terminals on the right*
+_The server handling multiple simultaneous client connections with colored log output - server logs on the left, two client terminals on the right_
 
 ## Implementation Details
 
@@ -70,17 +72,17 @@ The core of the server is a traditional select() loop. I maintain two file descr
 ```c
 while (server->running) {
     server->read_set = server->master_set;  // Copy master to working set
-    
+
     activity = select(server->max_fd + 1, &server->read_set, NULL, NULL, NULL);
-    
+
     // Check for new connections on server socket
     if (FD_ISSET(server->server_socket, &server->read_set)) {
         handle_new_connection(server);
     }
-    
+
     // Check all client sockets for incoming data
     for (i = 0; i < MAX_CLIENTS; i++) {
-        if (server->clients[i].active && 
+        if (server->clients[i].active &&
             FD_ISSET(server->clients[i].socket_fd, &server->read_set)) {
             handle_client_message(server, server->clients[i].socket_fd);
         }
@@ -101,7 +103,7 @@ The logging system includes color-coded output that makes it much easier to foll
 I organized the code into logical modules:
 
 - `src/server.c` - Main server logic and select() loop
-- `src/client_handler.c` - Client connection management and message processing  
+- `src/client_handler.c` - Client connection management and message processing
 - `src/socket_utils.c` - Socket creation, configuration, and utility functions
 - `src/test_client.c` - Test client with interactive and automated modes
 - `include/` - Header files with clean interfaces between modules
@@ -131,7 +133,7 @@ Building the test client alongside the server was really helpful. Having automat
 The automated test suite sends several different message types to verify basic functionality:
 
 - Simple text messages
-- Messages with numbers  
+- Messages with numbers
 - Messages with special characters
 - Multiple rapid-fire messages to test buffering
 
