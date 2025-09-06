@@ -60,7 +60,7 @@ If you don't specify a port, it defaults to 8080. The server will print connecti
 ./bin/test_client -a
 ```
 
-The test client has both interactive and automated modes. Interactive lets you type messages and see the responses. Automated mode sends a series of test messages which is useful for verifying everything works correctly.
+The test client has both interactive and automated modes where the interactive lets you type messages and see the responses. Automated mode sends a series of test messages which is useful for verifying everything works correctly.
 
 ![Server with Multiple Clients](images/1server2clients.png)
 _The server handling multiple simultaneous client connections with colored log output - server logs on the left, two client terminals on the right_
